@@ -34,12 +34,17 @@ defmodule S3.Genserver.Genserver2 do
       {:+, n1, n2} -> n1 + n2
       {:-, n1, n2} -> n1 - n2
       {:x, n1, n2} -> n1 * n2
-      {:/, _, 0} -> :infinity
+      #{:/, _, 0} -> :infinity
       {:/, n1, n2} -> n1 / n2
     end
     IO.inspect(called, label: "Processed")
     {:reply, result, %{called: {op, n1, n2}}}
   end
+
+  def handle_call({:/, _, 0}, _from, %{called: _called}) do
+    {:stop, "Division para cero" }
+  end
+
 
   #def handle_cast(:reset, %{called: _called} ) do
   #  %{called: called} = %{called: {:op, 0, 0}}
